@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Выбери себя первой</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0B0B0D;--pink:#E0307A;--pinkl:#F8C3D6;--gold:#C9A24D;--white:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:Montserrat,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3{font-family:Lora,Georgia,serif;font-weight:500;line-height:1.08}
+em{font-style:italic;color:var(--pink)}
+a{color:inherit}
+.k{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+main{position:relative;z-index:1}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:linear-gradient(#0B0B0Dcc,transparent)}
+.logo{font-family:Lora;font-style:italic;font-size:20px}.logo b{color:var(--pink);font-weight:500}
+.navbtn{background:var(--pink);border:none;color:#fff;font:700 13px Montserrat;letter-spacing:.08em;padding:10px 16px;border-radius:30px;cursor:pointer}
+section{position:relative;padding:110px 22px;max-width:1100px;margin:0 auto}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:80px}
+.hero h1{font-size:clamp(44px,9vw,110px);max-width:900px;text-shadow:0 4px 30px #0B0B0D}
+.hero h1 .w{display:inline-block;opacity:0;transform:translateY(30px) scale(.9);filter:blur(8px);transition:all .9s cubic-bezier(.2,.8,.2,1)}
+.hero h1 .w.on{opacity:1;transform:none;filter:none}
+.hero p{margin-top:26px;font-size:18px;max-width:520px;color:#ddd;line-height:1.6;opacity:0;transition:opacity 1.2s 1.6s}
+.hero.ready p,.hero.ready .scroll{opacity:1}
+.scroll{position:absolute;bottom:30px;left:22px;font-size:12px;letter-spacing:.2em;color:var(--gold);opacity:0;transition:opacity 1s 2s}
+.scroll:after{content:"";display:block;width:1px;height:50px;background:var(--gold);margin-top:10px;animation:dr 1.8s infinite}
+@keyframes dr{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.manifest{min-height:150vh}
+.manifest .sticky{position:sticky;top:20vh}
+.manifest p{font-family:Lora;font-size:clamp(28px,5vw,58px);line-height:1.25}
+.manifest .mw{opacity:.12;transition:opacity .3s}
+.manifest .mw.on{opacity:1}
+.reveal{opacity:0;transform:translateY(60px) scale(.92);transition:all 1s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.cat{border-radius:34px;padding:46px 30px;background:radial-gradient(120% 140% at 0% 0%,#FBD3E2,#F29BBE 55%,#E0307A);color:#0B0B0D;position:relative;overflow:hidden;cursor:pointer}
+.cat h2{font-size:clamp(36px,6vw,70px);max-width:700px}
+.cat em{color:#fff}
+.cat p{margin-top:16px;font-size:17px;max-width:520px;line-height:1.6}
+.cat .go{display:inline-flex;margin-top:28px;background:#0B0B0D;color:#fff;padding:18px 28px;border-radius:40px;font-weight:700;text-decoration:none}
+.cat:after{content:"";position:absolute;right:-80px;top:-80px;width:300px;height:300px;border-radius:50%;border:2px solid #ffffff88;animation:spin 18s linear infinite;border-style:dashed}
+@keyframes spin{to{transform:rotate(360deg)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:40px}
+.card{position:relative;border-radius:28px;padding:30px;min-height:300px;overflow:hidden;cursor:pointer;background:#151518;border:1px solid #2a2a2f;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .5s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.card:hover{transform:scale(1.03);border-color:var(--gold)}
+.card .glow{position:absolute;width:260px;height:260px;border-radius:50%;filter:blur(60px);opacity:.55;right:-60px;top:-60px;transition:transform 1s}
+.card:hover .glow{transform:scale(1.5)}
+.card .num{position:absolute;top:24px;left:30px;font-family:Lora;font-style:italic;font-size:22px;color:var(--gold)}
+.card h3{font-size:38px;position:relative}
+.card p{color:#bbb;margin-top:10px;font-size:15px;line-height:1.5;position:relative}
+.card .tags{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;position:relative}
+.tag{font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;background:#ffffff14;color:#fff}
+.tag.p{background:var(--pink)}.tag.g{background:var(--gold);color:#0B0B0D}
+.big{font-size:clamp(40px,7vw,90px)}
+.strip{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:30px 0 10px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.gd{flex:none;width:270px;scroll-snap-align:start;border-radius:24px;padding:26px;background:linear-gradient(170deg,#1b1b20,#121214);border:1px solid #2a2a2f;transition:transform .4s}
+.gd:hover{transform:translateY(-6px) scale(1.02)}
+.gd .price{font-family:Lora;font-size:40px;color:var(--pink);margin:14px 0 6px}
+.gd h3{font-size:24px}.gd p{font-size:14px;color:#bbb;line-height:1.5}
+.btn{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:none;cursor:pointer;font:700 15px Montserrat;padding:17px 20px;border-radius:18px;margin-top:12px;text-decoration:none;text-align:left}
+.btn.p{background:var(--pink);color:#fff}.btn.g{background:var(--gold);color:#0B0B0D}.btn.o{background:#ffffff10;color:#fff;border:1px solid #ffffff30}
+.btn small{display:block;font-weight:500;font-size:12px;opacity:.8;margin-top:2px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:30px}
+.box{border-radius:26px;padding:30px;background:#151518;border:1px solid #2a2a2f}
+.box h3{font-size:30px;margin:8px 0 10px}.box p{color:#ccc;line-height:1.6}
+footer{text-align:center;color:#777;font-size:12px;padding:40px 22px 60px;line-height:1.6}
+/* panel */
+#panel{position:fixed;inset:0;z-index:50;background:#0B0B0D;overflow-y:auto;clip-path:circle(0% at 50% 50%);transition:clip-path .8s cubic-bezier(.7,0,.2,1);visibility:hidden}
+#panel.open{clip-path:circle(150% at var(--x,50%) var(--y,50%));visibility:visible}
+#panel .in{max-width:640px;margin:0 auto;padding:80px 22px 60px}
+#panel .close{position:fixed;top:16px;right:16px;width:46px;height:46px;border-radius:50%;border:1px solid #ffffff40;background:#0B0B0Dcc;color:#fff;font-size:22px;cursor:pointer;z-index:2}
+#panel h2{font-size:clamp(40px,8vw,64px);margin:10px 0 16px}
+#panel .lead{color:#ccc;line-height:1.6;font-size:16px}
+.blk{margin-top:22px;border-radius:24px;padding:24px;background:#151518;border:1px solid #2a2a2f}
+.blk h3{font-size:26px;margin:6px 0 10px}
+.blk li{margin:8px 0 8px 20px;color:#ddd;line-height:1.5}
+.blk p{color:#ccc;line-height:1.6}
+.free{color:#7be3a6}.paid{color:var(--pink)}
+.opt{display:block;width:100%;text-align:left;background:#151518;border:1px solid #2a2a2f;border-radius:16px;padding:15px 18px;margin:9px 0;font:500 15px Montserrat;color:#fff;cursor:pointer;transition:border-color .2s,transform .2s}
+.opt:hover{border-color:var(--pink);transform:translateX(4px)}
+.progress{height:4px;background:#ffffff1a;border-radius:4px;overflow:hidden;margin:14px 0 22px}.progress div{height:100%;background:var(--pink);transition:width .4s}
+.check{display:flex;gap:10px;align-items:center;margin-top:10px;font-weight:600;color:var(--pinkl);cursor:pointer}.check input{width:20px;height:20px;accent-color:var(--pink)}
+.ctag{display:inline-block;background:var(--pink);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;margin:3px 4px 3px 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#0B0B0D;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}.hero h1 .w{opacity:1;transform:none;filter:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<nav><div class="logo">выбери <b>себя</b></div><button class="navbtn" onclick="openPanel('menu',event)">МЕНЮ</button></nav>
+<main>
+<section class="hero" id="top">
+  <div class="k" style="margin-bottom:22px">Таганрог · онлайн по всей России</div>
+  <h1 id="ht">Пока ты не полюбишь себя, <em>никто не полюбит</em></h1>
+  <p>Кожа, образ, тело, еда, голова и отношения. Здесь ты учишься выбирать себя первой: бесплатно и в маленьких шагах.</p>
+  <div class="scroll">ЛИСТАЙ</div>
+</section>
+
+<section class="manifest"><div class="sticky"><p id="mf">Ты делаешь всё для всех. Работа, дом, дети, чужие задачи. А ты в конце списка. Но пока ты не займёшься собой, у тебя ничего не получится. Женщина, которая выбирает себя, ухаживает за кожей, красиво одевается, двигается, вовремя спит и уважает свои желания. И к ней относятся иначе.</p></div></section>
+
+<section>
+  <div class="cat reveal" onclick="window.open(REF,'_blank')">
+    <div class="k" style="color:#0B0B0D">Шаг первый · Косметика</div>
+    <h2 style="margin-top:14px">Каталог <em>Mary Kay</em></h2>
+    <p>Уход, макияж и ароматы через независимого консультанта. Не знаешь, что выбрать? Напиши мне «УХОД», подберу за 5 минут.</p>
+    <a class="go" id="catLink" href="#" target="_blank" rel="noopener" onclick="event.stopPropagation()">Открыть каталог →</a>
+  </div>
+</section>
+
+<section>
+  <div class="k reveal">Шесть зон заботы</div>
+  <h2 class="big reveal" style="margin-top:12px">Выбери, с чего <em>начать</em></h2>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section>
+  <div class="k reveal">Бесплатно</div>
+  <h2 class="big reveal" style="margin-top:12px">Тест и <em>3 мини-курса</em></h2>
+  <div class="two">
+    <div class="box reveal"><div class="k">2 минуты</div><h3>Твой архетип и стиль</h3><p>10 вопросов. Узнаешь, какие вещи, цвета, макияж и движение подходят именно тебе.</p><button class="btn p" onclick="openPanel('test',event)"><span>Пройти тест</span><span>→</span></button></div>
+    <div class="box reveal"><div class="k">по 5 дней</div><h3>Мини-курсы успешной женщины</h3><p>«Утро, которое меня собирает», «Образ за 15 минут», «Уверенность и энергия».</p><button class="btn o" onclick="openPanel('kursy',event)"><span>Открыть курсы</span><span>→</span></button></div>
+  </div>
+</section>
+
+<section>
+  <div class="k reveal">Гайды от 390 ₽</div>
+  <h2 class="big reveal" style="margin-top:12px">Полезное, что <em>остаётся навсегда</em></h2>
+  <div class="strip reveal" id="strip"></div>
+</section>
+
+<section>
+  <div class="two">
+    <div class="box reveal"><div class="k">Таганрог · Ростовская область</div><h3>Попробуй уход до покупки</h3><p>Бесплатная встреча 45–60 минут, одна или с подругами. Уход на половину лица, тестеры, подбор макияжа.</p><button class="btn p" onclick="copyText('ВСТРЕЧА')"><span>Записаться<small>скопировать «ВСТРЕЧА» для директа</small></span><span>⧉</span></button></div>
+    <div class="box reveal"><div class="k">Своё дело</div><h3>Стань консультантом</h3><p>Бьюти-бизнес с телефона: свой график, онлайн-каталог по своей ссылке, обучение. Честно: доход зависит от твоих продаж.</p><button class="btn o" onclick="copyText('БИЗНЕС')"><span>Узнать условия<small>скопировать «БИЗНЕС» для директа</small></span><span>⧉</span></button></div>
+  </div>
+</section>
+
+<footer>Независимый консультант по красоте Mary Kay. Это личный сайт консультанта, а не официальный сайт компании.<br>Тест развлекательный. Советы по спорту и питанию общие: при заболеваниях посоветуйся с врачом.</footer>
+</main>
+
+<div id="panel"><button class="close" onclick="closePanel()">✕</button><div class="in" id="pin"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const REF="https://marykay.ru/catalog?ref_code=dbe7a61da2b00576d9a439de1576d2a520b24d5181943b43c98cca143d094709&utm_source=konsultant&utm_medium=referral&utm_campaign=pokupka_ot_kosultanta";
+const CONTACT="в директ Instagram"; // можно заменить, например: "в Telegram @ваш_ник"
+document.getElementById('catLink').href=REF;
+
+const GUIDES={
+ figura:{t:"Гардероб по фигуре",price:"490 ₽",code:"ГАЙД ФИГУРА",d:"Как определить свой тип фигуры и 12 вещей, которые идут тебе всегда. Цвета и формула 20+ образов.",pages:"12 страниц"},
+ telo:{t:"Тело в тонусе",price:"390 ₽",code:"ГАЙД ТЕЛО",d:"12 базовых упражнений дома без инвентаря, 3 программы и план на 4 недели.",pages:"11 страниц"},
+ eda:{t:"Тарелка красоты",price:"390 ₽",code:"ГАЙД ЕДА",d:"Питание для энергии и сияющей кожи без диет: правило тарелки, конструктор меню, список покупок.",pages:"8 страниц"},
+ psy:{t:"Выбери себя: 21 день",price:"390 ₽",code:"ГАЙД 21 ДЕНЬ",d:"Рабочая тетрадь любви к себе: 21 задание, вопросы для дневника и трекер.",pages:"8 страниц"},
+ love:{t:"Отношения начинаются с тебя",price:"390 ₽",code:"ГАЙД ОТНОШЕНИЯ",d:"Языки любви, границы, фразы для трудных разговоров и практики для двоих.",pages:"7 страниц"},
+ all:{t:"Все 5 гайдов",price:"1 490 ₽",code:"ВСЕ ГАЙДЫ",d:"Вместо 2 050 ₽. Плюс бесплатный подбор ухода от меня.",pages:"46 страниц"}
+};
+const ZONES=[
+ {id:"kozha",t:"Косметика",s:"Кожа и уход",c:"#E0307A",d:"Уход за 5 минут утром и вечером. Подбор по возрасту и типу кожи.",free:["Тест «Твой архетип и стиль»","Подбор ухода в директ: слово «УХОД»","Мини-курс «Утро, которое меня собирает»"],
+  body:`<p>Уход подбирают по двум вещам: возраст и тип кожи. 18+ — ровный тон и сияние, 25+ — сохранение молодости кожи, 45+ — уход за зрелой кожей.</p><ul><li>Утро: очищение → тоник → крем с защитой от солнца</li><li>Вечер: снять макияж → очищение → сыворотка → ночной крем</li><li>Дай системе минимум 4 недели</li></ul>`,paid:null,cat:true},
+ {id:"odezhda",t:"Одежда",s:"Образ",c:"#C9A24D",d:"Капсула, цвета и вещи по типу фигуры, которые не выходят из моды.",free:["Тест «Твой архетип и стиль»","Мини-курс «Образ за 15 минут»"],
+  body:`<p><b>Капсула на зиму из 10 вещей:</b></p><ul><li>Тонкий свитер, объёмный кардиган, белая рубашка, водолазка</li><li>Прямые джинсы, брюки со стрелками, юбка миди</li><li>Пальто прямого кроя, ботинки, лоферы или кроссовки</li></ul><p>Правило 3 цветов: база, светлый и акцент.</p>`,paid:"figura"},
+ {id:"sport",t:"Спорт",s:"Тело",c:"#F8C3D6",d:"Мини-тренировки дома. 7 минут утром, осанка и тонус.",free:["Зарядка 7 минут (ниже)","Мини-курс «Уверенность и энергия»"],
+  body:`<p><b>Зарядка 7 минут:</b></p><ul><li>Разминка шеи и плеч — 1 мин</li><li>Приседания — 2 × 15</li><li>Ягодичный мостик — 15</li><li>Планка — 2 × 30 сек</li><li>Кошка-корова — 1 мин</li></ul><p style="color:#999">При заболеваниях и травмах сначала посоветуйся с врачом.</p>`,paid:"telo"},
+ {id:"eda",t:"Питание",s:"Еда",c:"#7BE3A6",d:"Энергия и сияющая кожа без диет и запретов.",free:["Правило тарелки (ниже)","Мини-курс «Утро, которое меня собирает»"],
+  body:`<p><b>Тарелка в 3 части:</b></p><ul><li>½ — овощи и зелень</li><li>¼ — белок: рыба, птица, яйца, творог, бобовые</li><li>¼ — крупа или гарнир</li><li>+ немного полезных жиров</li></ul><p>Сладкое можно: после еды, а не вместо неё.</p>`,paid:"eda"},
+ {id:"psy",t:"Психология",s:"Голова",c:"#9B7BFF",d:"Любовь к себе, уверенность и твой архетип.",free:["Тест «Твой архетип и стиль»","5 признаков, что пора заняться собой (ниже)"],
+  body:`<p><b>Пора заняться собой, если:</b></p><ul><li>Не помнишь, когда покупала что-то себе</li><li>Зеркало раздражает</li><li>«Потом» стало постоянным</li><li>Устала уже с утра</li><li>Нет ничего «только своего»</li></ul>`,paid:"psy"},
+ {id:"love",t:"Отношения",s:"Пара и близкие",c:"#FF8A5B",d:"Границы, языки любви и спокойные разговоры.",free:["Мини-тест «Твой язык любви» (ниже)"],
+  body:`<p><b>Что для тебя важнее всего?</b></p><div id="lovetest"></div>`,paid:"love"}
+];
+const LOVE=[["Слова","Тебе важно слышать, что тебя ценят. Говори об этом прямо и сама хвали близких."],["Время","Тебе важно время вместе без телефонов. Договоритесь об одном «вашем» вечере в неделю."],["Подарки","Знаки внимания для тебя — любовь. Мелочи значат больше, чем цена."],["Помощь","Ты чувствуешь любовь, когда тебе помогают. Проси конкретно, это не слабость."],["Прикосновения","Тебе важны объятия и близость. Скажи об этом партнёру."]];
+
+const A={
+ Q:{name:"Королева",tag:"Лидер, который держит всё под контролем",about:"Ты принимаешь решения, ведёшь за собой и ценишь порядок. Тебя уважают и к тебе прислушиваются. Риск: тащить всё на себе и забывать про отдых.",style:"Строгие силуэты, жакеты, брюки со стрелками, платья-футляры, качественные ткани. Минимум деталей, максимум качества.",colors:["Тёмно-синий","Бордо","Графит","Молочный","Золото"],beauty:"Безупречно ровный тон, чёткие брови, классическая красная или ягодная помада. Основа всего — ухоженная кожа: антивозрастная система по возрасту.",move:"Пилатес или силовые с тренером: структура и результат.",aff:"Я управляю своей жизнью, и в ней есть место для отдыха.",course:1},
+ M:{name:"Муза",tag:"Женственность и обаяние",about:"Ты притягиваешь людей теплом и шармом, ценишь красоту и удовольствие от жизни. Риск: растворяться в других и забывать о своих желаниях.",style:"Струящиеся платья, мягкий трикотаж, шёлк, юбки миди, акцент на талии. Украшения тонкие и изящные.",colors:["Пудровый","Нюд","Винный","Шампань","Розовый"],beauty:"Сияющая увлажнённая кожа, лёгкий румянец, акцент на губах, шлейф аромата. Твой ритуал — маски и уход по вечерам.",move:"Танцы, растяжка, плавание.",aff:"Я достойна заботы и удовольствия, начиная с себя.",course:2},
+ C:{name:"Творец",tag:"Идеи и нестандартные решения",about:"Ты видишь мир по-своему, тебе скучно в шаблонах. Вдохновляешь людей идеями. Риск: распыляться и бросать начатое.",style:"Смелые сочетания, интересный крой, необычные аксессуары, принты. Одна яркая вещь в образе как подпись.",colors:["Терракота","Изумруд","Горчичный","Кобальт","Белый"],beauty:"Ровная кожа как холст и один яркий акцент: цветная помада или тени. Экспериментируй, но с хорошей базой ухода.",move:"Каждый раз что-то новое: зумба, йога, скалодром.",aff:"Мои идеи ценны, и я довожу их до конца.",course:1},
+ S:{name:"Искательница",tag:"Свобода, движение, новое",about:"Ты не любишь рамки, тебя тянет в путешествия и новые впечатления. Лёгкая на подъём. Риск: не заземляться и не беречь силы.",style:"Удобные вещи: джинсы, свитера, рубашки, тренч, кроссовки. Натуральные ткани и многослойность.",colors:["Оливковый","Песочный","Хаки","Деним","Карамель"],beauty:"Почти без макияжа: здоровая кожа, тушь, бальзам для губ. Обязательно увлажнение и защита от солнца.",move:"Бег, походы, велосипед, долгие прогулки.",aff:"Свобода начинается с энергии, и я её берегу.",course:3},
+ Z:{name:"Заботливая",tag:"Тепло и опора для других",about:"Ты чувствуешь людей и всегда готова помочь. На тебе держится дом и близкие. Риск: ставить себя последней в списке.",style:"Мягкие ткани, кардиганы, платья-рубашки, уютный трикотаж. Спокойные, приятные к телу вещи.",colors:["Пастельно-розовый","Голубой","Лаванда","Крем","Персик"],beauty:"Свежая кожа, нежный румянец, натуральный макияж. Тебе особенно нужен свой 5-минутный ритуал ухода — только для себя.",move:"Йога, прогулки, лёгкая зарядка дома.",aff:"Заботясь о себе, я даю близким лучшую версию себя.",course:3},
+ B:{name:"Бунтарка",tag:"Характер и своё мнение",about:"Ты говоришь, что думаешь, и живёшь по своим правилам. Сильная и честная. Риск: всё время бороться и не расслабляться.",style:"Контрасты, кожа, графичные линии, оверсайз, грубая обувь. Минимализм с характером.",colors:["Чёрный","Белый","Красный","Металлик","Глубокий серый"],beauty:"Выразительные глаза, матовая кожа, яркие губы или графичная стрелка. Уход простой и эффективный.",move:"Бокс, функциональный тренинг, интервальные тренировки.",aff:"Моя сила — и в том, чтобы позволять себе мягкость.",course:2}
+};
+const Qs=[
+ ["Твой идеальный выходной…",[["Организовать большой праздник для всех","Q"],["Спа, красивый ужин и свечи","M"],["Мастер-класс, рисовать или создавать","C"],["Поездка туда, где ещё не была","S"],["Собрать семью и близких дома","Z"],["Концерт или что-то дерзкое","B"]]],
+ ["Подруги ценят тебя за…",[["Решительность","Q"],["Тепло и обаяние","M"],["Идеи","C"],["Лёгкость на подъём","S"],["Заботу","Z"],["Честность","B"]]],
+ ["Какой цвет в одежде ближе?",[["Тёмно-синий, бордо","Q"],["Пудровый, нюд","M"],["Яркий микс","C"],["Оливковый, песочный","S"],["Пастель","Z"],["Чёрный","B"]]],
+ ["В твоей сумке всегда есть…",[["Ежедневник","Q"],["Помада и духи","M"],["Блокнот для идей","C"],["Вода и удобная обувь","S"],["Салфетки и перекус для всех","Z"],["Наушники","B"]]],
+ ["Какой фильм выберешь вечером?",[["Про успешную женщину","Q"],["Мелодраму","M"],["Авторское кино","C"],["Приключения и путешествия","S"],["Семейную комедию","Z"],["Драму с характером","B"]]],
+ ["Как ты принимаешь решения?",[["Быстро и за всех","Q"],["Как чувствую","M"],["Ищу нестандартный путь","C"],["Выбираю то, что даёт свободу","S"],["Думаю, как будет близким","Z"],["По-своему, даже если все против","B"]]],
+ ["Обувь твоей мечты…",[["Классические лодочки","Q"],["Изящные туфли на каблуке","M"],["Пара с необычным дизайном","C"],["Удобные кроссовки","S"],["Мягкие балетки","Z"],["Грубые ботинки","B"]]],
+ ["Что тебя больше всего раздражает?",[["Хаос и безответственность","Q"],["Грубость","M"],["Скука и шаблоны","C"],["Рамки и контроль","S"],["Равнодушие","Z"],["Лицемерие","B"]]],
+ ["Какой макияж тебе ближе?",[["Ровный тон и чёткие брови","Q"],["Сияние кожи и акцент на губах","M"],["Цветной акцент","C"],["Почти без макияжа","S"],["Свежесть и румянец","Z"],["Выразительные глаза","B"]]],
+ ["Какое движение по душе?",[["Пилатес или силовые с тренером","Q"],["Танцы и растяжка","M"],["Каждый раз что-то новое","C"],["Бег, походы, велосипед","S"],["Йога и прогулки","Z"],["Бокс и интенсив","B"]]]
+];
+
+const C={
+ 1:{title:"Утро, которое меня собирает",sub:"Ритуалы, после которых день идёт по-твоему",days:[
+  ["Первые 15 минут без телефона","Проснулась — не хватай телефон. Открой окно, потянись, выпей стакан воды. Эти 15 минут твои, а не чужих сообщений.","Положи телефон на ночь в другой угол комнаты."],
+  ["Умывание как ритуал","Утренний уход в 3 шага: мягкое очищение, тоник, дневной крем с защитой от солнца. Делай медленно, почувствуй руки на лице.","Не знаешь, какие средства твои? Напиши «УХОД», подберу."],
+  ["10 минут движения","Зарядка из 5 упражнений: разминка шеи и плеч, приседания, ягодичный мостик, планка, кошка-корова.","Не нужно идеально. Нужно каждый день."],
+  ["Завтрак, который держит до обеда","Добавь белок: яйца, творог, йогурт. Плюс фрукт или овощ. Без запретов, просто сытнее.","Приготовь с вечера ленивую овсянку."],
+  ["Три дела и одно для себя","Запиши 3 главных дела дня и 1 дело только для себя: прогулка, маска, книга, кофе в тишине.","Дело для себя — такое же важное, как рабочее."]]},
+ 2:{title:"Образ за 15 минут",sub:"Одеваться так, чтобы нравиться себе",days:[
+  ["Разбор гардероба","Достань всё. Задай каждой вещи 3 вопроса: носила за год? Сидит идеально? Нравлюсь себе в ней? Три «нет» — отдать.","Сфотографируй вещи, которые остались, это твоя база."],
+  ["Капсула из 10 вещей","Собери 4 верха, 3 низа, верхнюю одежду и 2 пары обуви в трёх цветах: база, светлый, акцент.","Чего не хватает, запиши в список покупок."],
+  ["Твои цвета","Приложи к лицу золото и серебро при дневном свете. Лицо свежее с золотом — у тебя тёплый подтон, с серебром — холодный.","Под подтон подбираются тон, румяна и помада. Подберу: «ОБРАЗ»."],
+  ["Макияж за 5 минут","Увлажнённая кожа, лёгкий тон, брови, тушь, бальзам или помада. Всё. Так ты выглядишь отдохнувшей.","Главное в макияже — ухоженная кожа под ним."],
+  ["5 образов из капсулы","Собери из своих 10 вещей 5 комплектов и сфотографируй в зеркале. Это твоя шпаргалка на неделю.","Выложи лучший образ в сторис и отметь меня!"]]},
+ 3:{title:"Уверенность и энергия",sub:"Тело, еда и голова в одной команде",days:[
+  ["Осанка","Встань к стене: пятки, ягодицы, лопатки, затылок касаются её. Минута. Потом сведи лопатки 10 раз.","Поставь напоминание: «плечи вниз, макушка вверх»."],
+  ["Прогулка 30 минут","Без цели и без спешки. Можно с подкастом или в тишине. Это лучший бесплатный антистресс.","Пройди часть пути домой пешком."],
+  ["Тарелка без запретов","Половина тарелки — овощи, четверть — белок, четверть — крупа или картофель. Сладкое можно, после еды.","Держи бутылку воды на виду весь день."],
+  ["Дневник побед","Вечером запиши 3 вещи, которые получились сегодня. Даже маленькие. Так мозг учится замечать твою силу.","Перечитай записи через неделю."],
+  ["Вечерний ритуал","Сними макияж, умойся, нанеси сыворотку и ночной крем. 5 минут только для тебя, а потом сон без телефона.","Хочешь подобрать вечерний уход? Напиши «УХОД»."]]}
+};
+
+
+// ---------- render grid & strip
+const grid=document.getElementById('grid');
+grid.innerHTML=ZONES.map((z,i)=>`<div class="card reveal" style="transition-delay:${i*80}ms" onclick="openPanel('z:${z.id}',event)"><div class="glow" style="background:${z.c}"></div><div class="num">0${i+1} · ${z.s}</div><h3>${z.t}</h3><p>${z.d}</p><div class="tags"><span class="tag">Бесплатно</span>${z.paid?`<span class="tag p">Гайд ${GUIDES[z.paid].price}</span>`:`<span class="tag g">Каталог</span>`}</div></div>`).join('');
+document.getElementById('strip').innerHTML=Object.entries(GUIDES).map(([k,g])=>`<div class="gd"><div class="k">${g.pages}</div><div class="price">${g.price}</div><h3>${g.t}</h3><p>${g.d}</p><button class="btn p" onclick="openPanel('buy:${k}',event)"><span>Купить</span><span>→</span></button></div>`).join('');
+
+// ---------- hero words
+const ht=document.getElementById('ht');
+(function splitWords(el){const nodes=[...el.childNodes];el.innerHTML='';nodes.forEach(n=>{if(n.nodeType===3){n.textContent.split(/(\s+)/).forEach(t=>{if(!t.trim()){el.append(t);return}const s=document.createElement('span');s.className='w';s.textContent=t;el.append(s)})}else{const e=document.createElement('em');n.textContent.split(/(\s+)/).forEach(t=>{if(!t.trim()){e.append(t);return}const s=document.createElement('span');s.className='w';s.textContent=t;e.append(s)});el.append(e)}})})(ht);
+ht.querySelectorAll('.w').forEach((w,i)=>setTimeout(()=>w.classList.add('on'),250+i*120));
+setTimeout(()=>document.querySelector('.hero').classList.add('ready'),300);
+// manifest words
+const mf=document.getElementById('mf');mf.innerHTML=mf.textContent.split(' ').map(w=>`<span class="mw">${w}</span>`).join(' ');
+const mws=[...mf.querySelectorAll('.mw')];
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+let scrollP=0;
+addEventListener('scroll',()=>{
+ const sec=document.querySelector('.manifest');const r=sec.getBoundingClientRect();
+ const p=Math.min(1,Math.max(0,(innerHeight*.7-r.top)/(r.height*.7)));
+ const n=Math.floor(p*mws.length);mws.forEach((w,i)=>w.classList.toggle('on',i<n));
+ scrollP=scrollY/(document.body.scrollHeight-innerHeight||1);
+},{passive:true});
+
+// ---------- three.js background
+(function(){
+ const cv=document.getElementById('bg');
+ if(!window.THREE){cv.style.background='radial-gradient(60% 50% at 70% 20%,#E0307A55,transparent),radial-gradient(50% 40% at 10% 90%,#C9A24D33,transparent)';return}
+ const R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+ const S=new THREE.Scene();const C=new THREE.PerspectiveCamera(60,1,.1,100);C.position.z=6;
+ const N=innerWidth<700?1400:2600;const g=new THREE.BufferGeometry();const pos=new Float32Array(N*3),col=new Float32Array(N*3);
+ const c1=new THREE.Color('#E0307A'),c2=new THREE.Color('#C9A24D'),c3=new THREE.Color('#ffffff');
+ for(let i=0;i<N;i++){const r=2.2+Math.random()*4.5,t=Math.random()*Math.PI*2,y=(Math.random()-.5)*6;pos[i*3]=Math.cos(t)*r;pos[i*3+1]=y;pos[i*3+2]=Math.sin(t)*r;const c=[c1,c2,c3][i%3];col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}
+ g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+ const sp=document.createElement('canvas');sp.width=sp.height=64;const sx=sp.getContext('2d');const gr=sx.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'#fff');gr.addColorStop(.4,'#ffffffaa');gr.addColorStop(1,'#fff0');sx.fillStyle=gr;sx.fillRect(0,0,64,64);
+ const pts=new THREE.Points(g,new THREE.PointsMaterial({map:new THREE.CanvasTexture(sp),size:.07,vertexColors:true,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false}));S.add(pts);
+ const knot=new THREE.Mesh(new THREE.TorusKnotGeometry(1,.32,220,32),new THREE.MeshStandardMaterial({color:'#F29BBE',metalness:.85,roughness:.2,emissive:'#3a0a1c'}));knot.position.set(1.6,.3,0);S.add(knot);
+ S.add(new THREE.AmbientLight('#ffffff',.35));const l1=new THREE.PointLight('#ffffff',1.6);l1.position.set(4,4,5);S.add(l1);const l2=new THREE.PointLight('#C9A24D',1.4);l2.position.set(-4,-2,3);S.add(l2);const l3=new THREE.PointLight('#E0307A',2);l3.position.set(0,-3,2);S.add(l3);
+ let mx=0,my=0;addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+ function size(){R.setSize(innerWidth,innerHeight,false);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();knot.position.x=innerWidth<700?1.1:1.8;knot.position.y=innerWidth<700?2.9:.3}
+ size();addEventListener('resize',size);
+ const t0=performance.now();
+ (function loop(){const t=(performance.now()-t0)/1000;pts.rotation.y=t*.04+scrollP*2;pts.rotation.x=my*.2;knot.rotation.x=t*.25+scrollP*4;knot.rotation.y=t*.35;
+  const s=1-Math.min(scrollP*3,1)*.6;knot.scale.setScalar((innerWidth<700?.45:1)*s+.0001);knot.material.opacity=1;C.position.x+=(mx*.8-C.position.x)*.05;C.position.y+=(-my*.5-C.position.y)*.05;C.position.z=6-scrollP*2;C.lookAt(0,0,0);R.render(S,C);requestAnimationFrame(loop)})();
+})();
+
+// ---------- panel
+const panel=document.getElementById('panel'),pin=document.getElementById('pin');
+function openPanel(what,ev){
+ if(ev&&ev.clientX!==undefined){panel.style.setProperty('--x',ev.clientX+'px');panel.style.setProperty('--y',ev.clientY+'px')}
+ pin.innerHTML=view(what);panel.scrollTop=0;panel.classList.add('open');document.body.style.overflow='hidden';
+ if(what==='test'){delete pin.dataset.started;testStart()}
+ if(what==='z:love')loveTest();
+ try{history.replaceState(null,'','#'+what.replace(':','-'))}catch(e){}
+}
+function closePanel(){panel.classList.remove('open');document.body.style.overflow='';try{history.replaceState(null,'',' ')}catch(e){}}
+function view(w){
+ if(w==='menu')return `<div class="k">Меню</div><h2>Выбери <em>себя</em></h2>`+[["Каталог Mary Kay","cat"],["Тест «Твой архетип и стиль»","test"],["3 мини-курса","kursy"],...ZONES.map(z=>[z.t,'z:'+z.id]),["Все гайды","buy:all"]].map(([t,k])=>k==='cat'?`<a class="btn p" href="${REF}" target="_blank" rel="noopener"><span>${t}</span><span>→</span></a>`:`<button class="btn o" onclick="openPanel('${k}')"><span>${t}</span><span>→</span></button>`).join('');
+ if(w==='test')return `<div id="testBox"></div>`;
+ if(w==='kursy')return `<div class="k">Бесплатно</div><h2>3 мини-курса <em>успешной женщины</em></h2><p class="lead">По 5 дней, одно маленькое задание в день. Прогресс сохраняется в этом браузере.</p>`+[1,2,3].map(n=>{const s=store(),d=[0,1,2,3,4].filter(i=>s[n+'-'+i]).length;return `<button class="btn o" onclick="openPanel('kurs:${n}')"><span>Курс ${n}. ${C[n].title}<small>${C[n].sub} · выполнено ${d}/5</small></span><span>→</span></button>`}).join('');
+ if(w.startsWith('kurs:'))return courseHTML(w.slice(5));
+ if(w.startsWith('buy:')){const g=GUIDES[w.slice(4)];return `<div class="k">Гайд · ${g.pages} · PDF</div><h2>${g.t}</h2><div style="font-family:Lora;font-size:48px;color:var(--pink)">${g.price}</div><p class="lead" style="margin-top:12px">${g.d}</p>
+  <div class="blk"><h3>Как купить</h3><ol style="margin-left:20px;line-height:1.8;color:#ddd"><li>Скопируй код <b>«${g.code}»</b></li><li>Отправь его мне ${CONTACT}</li><li>Я пришлю реквизиты для оплаты</li><li>После оплаты сразу получишь PDF</li></ol></div>
+  <button class="btn p" onclick="copyText('${g.code}')"><span>Скопировать «${g.code}»</span><span>⧉</span></button>
+  <a class="btn o" href="${REF}" target="_blank" rel="noopener"><span>А пока загляни в каталог Mary Kay</span><span>→</span></a>`}
+ if(w.startsWith('z:')){const z=ZONES.find(x=>x.id===w.slice(2));return `<div class="k">${z.s}</div><h2>${z.t}</h2><p class="lead">${z.d}</p>
+  <div class="blk"><div class="k free">Бесплатно</div>${z.body}</div>
+  <div class="blk"><div class="k free">Ещё бесплатно</div><ul>${z.free.map(f=>`<li>${f}</li>`).join('')}</ul><button class="btn o" onclick="openPanel('test')"><span>Пройти тест</span><span>→</span></button><button class="btn o" onclick="openPanel('kursy')"><span>Мини-курсы</span><span>→</span></button></div>
+  ${z.paid?`<div class="blk"><div class="k paid">Гайд · ${GUIDES[z.paid].price}</div><h3>${GUIDES[z.paid].t}</h3><p>${GUIDES[z.paid].d}</p><button class="btn p" onclick="openPanel('buy:${z.paid}')"><span>Купить за ${GUIDES[z.paid].price}</span><span>→</span></button></div>`:''}
+  <a class="btn g" href="${REF}" target="_blank" rel="noopener"><span>Каталог Mary Kay<small>уход и макияж, чтобы закрепить результат</small></span><span>→</span></a>`}
+ return '';
+}
+function loveTest(){const b=document.getElementById('lovetest');b.innerHTML=LOVE.map((l,i)=>`<button class="opt" onclick="document.getElementById('lr').innerHTML='<b>${l[0]}.</b> ${l[1]}'">${l[0]}</button>`).join('')+`<p id="lr" style="margin-top:12px;color:var(--pinkl)"></p>`}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2400)}
+function copyText(t){try{navigator.clipboard.writeText(t).then(()=>toast('Скопировано: '+t+'. Отправь мне '+CONTACT),()=>toast('Напиши мне '+CONTACT+': '+t))}catch(e){toast('Напиши мне '+CONTACT+': '+t)}}
+function store(){try{return JSON.parse(localStorage.getItem('kursy')||'{}')}catch(e){return {}}}
+function save(o){try{localStorage.setItem('kursy',JSON.stringify(o))}catch(e){}}
+function mark(k,v){const s=store();s[k]=v;save(s);if(v)toast('Ты выбрала себя 💗')}
+function courseHTML(n){const c=C[n],s=store();return `<div class="k">Мини-курс ${n} · 5 дней</div><h2>${c.title}</h2><p class="lead">${c.sub}</p>`+c.days.map((d,i)=>`<div class="blk"><div class="k">День ${i+1}</div><h3>${d[0]}</h3><p>${d[1]}</p><p style="color:#999;margin-top:8px">💡 ${d[2]}</p><label class="check"><input type="checkbox" ${s[n+'-'+i]?'checked':''} onchange="mark('${n}-${i}',this.checked)">Сделала</label></div>`).join('')+`<a class="btn p" href="${REF}" target="_blank" rel="noopener"><span>Каталог Mary Kay<small>уход для твоих ритуалов</small></span><span>→</span></a><button class="btn o" onclick="openPanel('kursy')"><span>← Все курсы</span><span></span></button>`}
+// test
+let step=0,score={};
+function testStart(){step=0;score={Q:0,M:0,C:0,S:0,Z:0,B:0};renderQ()}
+function renderQ(){const box=document.getElementById('testBox');if(!box)return;
+ if(step===0&&!pin.dataset.started){box.innerHTML=`<div class="k">Тест · 2 минуты</div><h2>Твой архетип <em>и стиль</em></h2><p class="lead">10 вопросов. Выбирай первое, что откликается.</p><button class="btn p" style="margin-top:20px" onclick="pin.dataset.started=1;renderQ()"><span>Начать</span><span>→</span></button><p style="color:#777;font-size:12px;margin-top:20px">Тест развлекательный и не является психологической диагностикой.</p>`;return}
+ if(step>=Qs.length)return result();
+ const [q,opts]=Qs[step];const sh=opts.slice().sort(()=>Math.random()-.5);
+ box.innerHTML=`<div class="k">Вопрос ${step+1} из ${Qs.length}</div><div class="progress"><div style="width:${step/Qs.length*100}%"></div></div><h2 style="font-size:34px">${q}</h2>`+sh.map(o=>`<button class="opt" onclick="pick('${o[1]}')">${o[0]}</button>`).join('')}
+function pick(k){score[k]++;step++;renderQ();panel.scrollTop=0}
+function result(){const order=["Q","M","C","S","Z","B"];let best=order[0];order.forEach(k=>{if(score[k]>score[best])best=k});const a=A[best];
+ const cn={1:"Утро, которое меня собирает",2:"Образ за 15 минут",3:"Уверенность и энергия"};
+ document.getElementById('testBox').innerHTML=`<div class="k">Твой архетип</div><h2 style="font-size:64px">${a.name}</h2><p style="color:var(--gold);font-weight:600">${a.tag}</p>
+ <div class="blk"><p>${a.about}</p></div>
+ <div class="blk"><h3>👗 Одежда</h3><p>${a.style}</p><div style="margin-top:10px">${a.colors.map(c=>`<span class="ctag">${c}</span>`).join('')}</div></div>
+ <div class="blk"><h3>💄 Уход и макияж</h3><p>${a.beauty}</p><p style="margin-top:8px;color:var(--pinkl)">Подберу средства под твой архетип: напиши мне «${a.name.toUpperCase()}».</p></div>
+ <div class="blk"><h3>🏃‍♀️ Движение</h3><p>${a.move}</p></div>
+ <div class="blk" style="text-align:center"><div class="k">Твоя фраза</div><p style="font-family:Lora;font-style:italic;font-size:22px;color:#fff;margin-top:8px">«${a.aff}»</p></div>
+ <a class="btn p" href="${REF}" target="_blank" rel="noopener"><span>Каталог Mary Kay<small>уход и макияж под твой архетип</small></span><span>→</span></a>
+ <button class="btn g" onclick="openPanel('buy:figura')"><span>Гайд «Гардероб по фигуре» · 490 ₽</span><span>→</span></button>
+ <button class="btn o" onclick="openPanel('kurs:${a.course}')"><span>Твой курс: «${cn[a.course]}»<small>бесплатно</small></span><span>→</span></button>
+ <button class="btn o" onclick="copyText('Мой архетип: ${a.name}')"><span>Скопировать результат для директа</span><span>⧉</span></button>`;panel.scrollTop=0}
+addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
+// deep links
+(function(){const h=location.hash.slice(1);if(!h)return;const m={test:'test',kursy:'kursy'};if(m[h])setTimeout(()=>openPanel(m[h]),600);else if(/^z-/.test(h))setTimeout(()=>openPanel('z:'+h.slice(2)),600);else if(/^buy-/.test(h))setTimeout(()=>openPanel('buy:'+h.slice(4)),600)})();
+</script>
+</body>
+</html>
